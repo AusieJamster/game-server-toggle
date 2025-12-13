@@ -10,6 +10,7 @@ A Next.js TypeScript application for controlling AWS EC2 instances with automati
 - 📊 Live instance status monitoring
 - 🎨 Modern, responsive UI with smooth animations
 - 🔒 Secure AWS SDK integration
+- 🛡️ Role-Based Access Control (RBAC) with Clerk Organizations
 
 ## Prerequisites
 
@@ -79,9 +80,14 @@ EC2_INSTANCE_ID=i-0123456789abcdef0
 # EventBridge Configuration
 EVENTBRIDGE_RULE_NAME_PREFIX=ec2-auto-shutdown
 EVENTBRIDGE_ROLE_ARN=arn:aws:iam::YOUR_ACCOUNT_ID:role/YOUR_EVENTBRIDGE_ROLE
+
+# Clerk Authentication
+NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY=pk_test_...
+CLERK_SECRET_KEY=sk_test_...
+CLERK_AUTHORIZED_ORG_ID=org_...
 ```
 
-**Important:** Replace the placeholder values with your actual AWS credentials and EC2 instance ID.
+**Important:** Replace the placeholder values with your actual AWS credentials, EC2 instance ID, and Clerk keys.
 
 ### 3. EventBridge IAM Role
 
@@ -98,10 +104,7 @@ You need to create an IAM role for EventBridge to stop your EC2 instances. Here'
   "Statement": [
     {
       "Effect": "Allow",
-      "Action": [
-        "ec2:StopInstances",
-        "ssm:StartAutomationExecution"
-      ],
+      "Action": ["ec2:StopInstances", "ssm:StartAutomationExecution"],
       "Resource": "*"
     }
   ]
@@ -110,7 +113,17 @@ You need to create an IAM role for EventBridge to stop your EC2 instances. Here'
 
 5. Copy the role ARN and add it to your `.env.local` as `EVENTBRIDGE_ROLE_ARN`
 
-### 4. Run the Development Server
+### 4. Authentication Setup (Clerk)
+
+This application uses Clerk for authentication and organization-based authorization.
+
+1.  **Create a Clerk Application**: Go to [Clerk Dashboard](https://dashboard.clerk.com/) and create a new application.
+2.  **Enable Organizations**: In the Clerk Dashboard, ensure Organizations are enabled.
+3.  **Create an Organization**: Create an organization that will hold the authorized users (e.g., "Game Server Admins").
+4.  **Get Organization ID**: Copy the Organization ID (starts with `org_`) and set it as `CLERK_AUTHORIZED_ORG_ID` in your `.env.local`.
+5.  **Invite Users**: Invite users to this organization and assign them the **Admin** role. Only Admins of this specific organization can access the app.
+
+### 5. Run the Development Server
 
 ```bash
 npm run dev
