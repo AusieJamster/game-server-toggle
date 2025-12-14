@@ -9,11 +9,11 @@ import {
 } from "@/types/ec2";
 
 const DURATION_OPTIONS = [
-  { label: "30 minutes", value: 30 },
-  { label: "1 hour", value: 60 },
-  { label: "2 hours", value: 120 },
-  { label: "4 hours", value: 240 },
-  { label: "8 hours", value: 480 },
+  { label: "30 minutes / $0.23", value: 30 },
+  { label: "1 hour / $0.45", value: 60 },
+  { label: "2 hours / $0.90", value: 120 },
+  { label: "4 hours  / $1.80", value: 240 },
+  { label: "8 hours / $3.60", value: 480 },
 ];
 
 export default function EC2Controller() {
@@ -169,7 +169,7 @@ export default function EC2Controller() {
                   color: "var(--primary-light)",
                 }}
               >
-                {status.publicIp}
+                {status.publicIp}:8211
               </span>
             </div>
           )}
