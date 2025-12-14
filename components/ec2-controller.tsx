@@ -8,12 +8,15 @@ import {
   StatusResponse,
 } from "@/types/ec2";
 
+const COST_PER_HOUR = Number(process.env.NEXT_PUBLIC_COST_PER_HOUR) || 0.45;
+const GAME_PORT = process.env.NEXT_PUBLIC_GAME_PORT || "8211";
+
 const DURATION_OPTIONS = [
-  { label: "30 minutes / $0.23", value: 30 },
-  { label: "1 hour / $0.45", value: 60 },
-  { label: "2 hours / $0.90", value: 120 },
-  { label: "4 hours  / $1.80", value: 240 },
-  { label: "8 hours / $3.60", value: 480 },
+  { label: `30 minutes / $${(COST_PER_HOUR * 0.5).toFixed(2)}`, value: 30 },
+  { label: `1 hour / $${COST_PER_HOUR.toFixed(2)}`, value: 60 },
+  { label: `2 hours / $${(COST_PER_HOUR * 2).toFixed(2)}`, value: 120 },
+  { label: `4 hours / $${(COST_PER_HOUR * 4).toFixed(2)}`, value: 240 },
+  { label: `8 hours / $${(COST_PER_HOUR * 8).toFixed(2)}`, value: 480 },
 ];
 
 export default function EC2Controller() {
@@ -169,7 +172,7 @@ export default function EC2Controller() {
                   color: "var(--primary-light)",
                 }}
               >
-                {status.publicIp}:8211
+                {status.publicIp}:{GAME_PORT}
               </span>
             </div>
           )}
